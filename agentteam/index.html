@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentTeam｜一人公司 AI Agent 团队搭建模板包 · iPeng AI</title>
+  <meta name="description" content="一套可直接复制改用的 AI Agent 团队搭建模板包，包含角色设计、AGENT_WORK、周报反馈、状态看板与避坑清单。">
+  <meta name="keywords" content="AgentTeam,AI Agent团队,一人公司,AI工作流,AGENT_WORK,AI Agent模板">
+  <link rel="canonical" href="https://ipengai.cn/agentteam/">
+  <meta property="og:title" content="AgentTeam｜一人公司 AI Agent 团队搭建模板包">
+  <meta property="og:description" content="9 份可编辑资料：5 个核心方法文件、3 个可复制模板和 1 份使用说明，帮你把一组 AI Agent 组织成能持续工作的团队。">
+  <meta property="og:type" content="product">
+  <meta property="og:url" content="https://ipengai.cn/agentteam/">
+  <meta property="og:image" content="https://ipengai.cn/agentteam/assets/product-cover.png">
+  <style>
+    :root {
+      --paper: #faf9f6;
+      --paper-2: #f6f1e8;
+      --ink: #171614;
+      --muted: #69665f;
+      --line: rgba(23,22,20,.1);
+      --terra: #c96442;
+      --gold: #b5863d;
+      --green: #4f907c;
+      --purple: #9b6eb5;
+      --white: #fffdfa;
+      --shadow: 0 22px 70px rgba(74,52,28,.11);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 4%, rgba(201,100,66,.1), transparent 28%),
+        radial-gradient(circle at 90% 14%, rgba(155,110,181,.07), transparent 25%),
+        var(--paper);
+      line-height: 1.65;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(23,22,20,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23,22,20,.035) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, #000, transparent 85%);
+      z-index: -1;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    .container { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(250,249,246,.86);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+    }
+    .nav {
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 760; }
+    .brand-mark {
+      width: 34px; height: 34px; display: grid; place-items: center;
+      border-radius: 11px; color: var(--white); font-size: 14px;
+      background: linear-gradient(135deg, var(--terra), var(--gold), var(--purple));
+    }
+    .brand small { color: var(--muted); font-size: 12px; font-weight: 550; }
+    .nav-links { display: flex; align-items: center; gap: 22px; color: var(--muted); font-size: 13px; }
+    .nav-buy { padding: 9px 15px; border-radius: 999px; color: var(--white); background: var(--terra); font-weight: 700; }
+
+    .hero { padding: 82px 0 72px; }
+    .hero-grid { display: grid; grid-template-columns: 1.12fr .78fr; gap: 54px; align-items: center; }
+    .eyebrow { color: var(--terra); font-size: 12px; font-weight: 800; letter-spacing: .1em; margin-bottom: 18px; }
+    h1 { font-size: clamp(42px, 4.5vw, 58px); line-height: 1.06; letter-spacing: -.055em; max-width: 680px; }
+    .hero-line { display: block; white-space: nowrap; }
+    h1 .hero-line:last-child { color: var(--terra); }
+    .hero-copy { max-width: 680px; margin-top: 24px; color: var(--muted); font-size: 18px; }
+    .hero-proof { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 24px; }
+    .hero-proof span { padding: 7px 11px; border: 1px solid var(--line); border-radius: 999px; color: #57534d; background: rgba(255,253,250,.72); font-size: 12px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 13px 20px; border-radius: 999px; font-weight: 720; font-size: 14px; }
+    .btn-primary { color: var(--white); background: var(--terra); box-shadow: 0 14px 34px rgba(201,100,66,.22); }
+    .btn-secondary { border: 1px solid rgba(23,22,20,.18); background: rgba(255,253,250,.66); }
+    .price-line { display: flex; align-items: baseline; gap: 10px; margin-top: 25px; }
+    .price-line strong { color: var(--ink); font-size: 30px; }
+    .price-line span { color: var(--muted); font-size: 12px; }
+
+    .cover-wrap { position: relative; max-width: 390px; margin-left: auto; }
+    .cover-wrap::before { content: ""; position: absolute; inset: 8% -8% -6% 12%; border-radius: 28px; background: linear-gradient(135deg, rgba(201,100,66,.15), rgba(79,144,124,.15)); filter: blur(1px); }
+    .cover-wrap img { position: relative; border-radius: 24px; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,.7); }
+
+    section { padding: 88px 0; }
+    .section-head { max-width: 760px; margin-bottom: 34px; }
+    .section-tag { color: var(--terra); font-size: 11px; font-weight: 800; letter-spacing: .12em; }
+    h2 { margin-top: 10px; font-size: clamp(30px, 4vw, 48px); line-height: 1.12; letter-spacing: -.035em; }
+    .section-head p { color: var(--muted); margin-top: 12px; }
+
+    .pain-section { padding-top: 76px; background: rgba(246,241,232,.58); border-block: 1px solid rgba(23,22,20,.055); }
+    .pain-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; }
+    .pain-card { padding: 22px; border: 1px solid var(--line); border-radius: 17px; background: rgba(255,253,250,.82); }
+    .pain-card .pain-label { color: var(--terra); font-size: 10px; font-weight: 800; letter-spacing: .1em; }
+    .pain-card h3 { margin-top: 8px; font-size: 17px; line-height: 1.35; }
+    .pain-card p { margin-top: 9px; color: var(--muted); font-size: 13px; }
+    .pain-card .gain { display: block; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); color: #3f6f61; font-size: 12px; font-weight: 700; }
+
+    .proof-section { padding-bottom: 72px; }
+    .case-layout { display: grid; grid-template-columns: 1.12fr .88fr; gap: 16px; }
+    .case-panel, .result-panel { border: 1px solid var(--line); border-radius: 21px; background: rgba(255,253,250,.78); overflow: hidden; }
+    .case-panel { padding: 28px; }
+    .case-kicker { color: var(--terra); font-size: 10px; font-weight: 800; letter-spacing: .1em; }
+    .case-panel h3, .result-panel h3 { margin-top: 8px; font-size: 22px; line-height: 1.25; }
+    .case-note { color: var(--muted); font-size: 12px; margin-top: 8px; }
+    .role-list { display: grid; margin-top: 20px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+    .role-row { display: grid; grid-template-columns: 100px 1fr 90px; gap: 12px; align-items: center; padding: 11px 13px; border-bottom: 1px solid var(--line); font-size: 12px; }
+    .role-row:last-child { border-bottom: 0; }
+    .role-row b { color: var(--ink); }
+    .role-row span { color: var(--muted); }
+    .role-row em { color: var(--gold); font-style: normal; text-align: right; font-size: 11px; }
+    .result-panel { padding: 28px; background: linear-gradient(145deg, #201f1d, #302a26); color: var(--white); }
+    .result-panel .case-kicker { color: #dfa887; }
+    .result-list { display: grid; gap: 15px; margin-top: 22px; }
+    .result-item { display: grid; grid-template-columns: 34px 1fr; gap: 11px; align-items: start; }
+    .result-item b { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; color: #f0c6aa; background: rgba(255,255,255,.08); font-size: 11px; }
+    .result-item strong { display: block; font-size: 14px; }
+    .result-item span { display: block; margin-top: 3px; color: rgba(255,253,250,.62); font-size: 12px; }
+    .result-quote { margin-top: 22px; padding: 14px 16px; border-left: 3px solid var(--gold); border-radius: 0 12px 12px 0; background: rgba(255,255,255,.055); color: rgba(255,253,250,.8); font-size: 12px; }
+
+    .sample-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 18px; }
+    .sample-card { min-width: 0; border: 1px solid var(--line); border-radius: 18px; background: #fffdfa; box-shadow: 0 12px 32px rgba(74,52,28,.06); overflow: hidden; }
+    .sample-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 15px; border-bottom: 1px solid var(--line); background: #f7f2ea; }
+    .sample-file { color: #4e4a43; font: 600 10px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sample-badge { flex: 0 0 auto; color: var(--green); font-size: 9px; font-weight: 800; }
+    .sample-body { padding: 18px; }
+    .sample-body h4 { font-size: 15px; }
+    .sample-body > p { margin-top: 6px; color: var(--muted); font-size: 11px; }
+    .sample-code { margin-top: 14px; padding: 13px; border-radius: 12px; background: #252320; color: #f1ece4; font: 10px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; overflow: hidden; }
+    .sample-code .key { color: #e3a27e; }
+    .sample-code .value { color: #b9d8ca; }
+    .sample-mini-table { display: grid; margin-top: 14px; border: 1px solid var(--line); border-radius: 11px; overflow: hidden; }
+    .sample-mini-row { display: grid; grid-template-columns: .8fr 1.2fr; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); font-size: 10px; }
+    .sample-mini-row:last-child { border-bottom: 0; }
+    .sample-mini-row b { color: var(--ink); }
+    .sample-mini-row span { color: var(--muted); }
+
+    .contents-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .content-card { padding: 24px; border: 1px solid var(--line); border-radius: 17px; background: rgba(255,253,250,.7); box-shadow: 0 10px 28px rgba(74,52,28,.05); }
+    .content-number { color: var(--terra); font-size: 11px; font-weight: 800; }
+    .content-card h3 { margin-top: 9px; font-size: 17px; }
+    .content-card p { margin-top: 7px; color: var(--muted); font-size: 13px; }
+    .content-card.template { background: linear-gradient(135deg, rgba(181,134,61,.08), rgba(255,253,250,.75)); }
+
+    .system-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 26px; }
+    .system-step { padding: 20px 16px; border-radius: 15px; background: var(--ink); color: var(--white); }
+    .system-step b { display: block; color: #dfa887; font-size: 11px; margin-bottom: 5px; }
+    .system-step span { font-size: 14px; font-weight: 650; }
+
+    .fit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .fit-card { padding: 28px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,253,250,.72); }
+    .fit-card h3 { font-size: 19px; }
+    .fit-card ul { display: grid; gap: 10px; margin-top: 16px; list-style: none; color: var(--muted); font-size: 14px; }
+    .fit-card li { position: relative; padding-left: 22px; }
+    .fit-card li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 800; }
+    .fit-card.not li::before { content: "—"; color: var(--terra); }
+
+    .buy-section { padding-top: 60px; }
+    .buy-panel { display: grid; grid-template-columns: 1.1fr .9fr; gap: 54px; align-items: center; padding: clamp(28px, 5vw, 58px); border: 1px solid var(--line); border-radius: 26px; background: linear-gradient(135deg, #fffdfa, #f4eee4); box-shadow: var(--shadow); }
+    .buy-panel h2 { margin-top: 0; }
+    .buy-panel > div > p { color: var(--muted); margin-top: 13px; }
+    .buy-list { display: grid; gap: 9px; margin: 22px 0; list-style: none; color: #504d47; font-size: 13px; }
+    .buy-list li::before { content: "✓"; color: var(--green); margin-right: 9px; }
+    .delivery-note { padding: 14px 16px; border-left: 3px solid var(--gold); background: rgba(181,134,61,.07); border-radius: 0 11px 11px 0; color: var(--muted); font-size: 12px; }
+
+    .pay-card { padding: 22px; border: 1px solid var(--line); border-radius: 20px; background: rgba(255,253,250,.8); text-align: center; }
+    .pay-title { color: var(--terra); font-size: 12px; font-weight: 800; letter-spacing: .08em; }
+    .pay-price { font-size: 40px; font-weight: 820; margin: 5px 0 4px; }
+    .pay-once { color: var(--muted); font-size: 11px; }
+    .checkout-flow { display: grid; gap: 9px; margin-top: 20px; text-align: left; }
+    .checkout-step { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); color: #504d47; font-size: 12px; }
+    .checkout-step b { width: 24px; height: 24px; display: grid; place-items: center; flex: 0 0 24px; border-radius: 8px; color: var(--terra); background: rgba(201,100,66,.09); font-size: 10px; }
+    .pay-help { color: var(--muted); font-size: 11px; margin-top: 12px; }
+    .pay-contact { margin-top: 14px; width: 100%; }
+    .checkout-pending { margin-top: 10px; color: #9a6a25; font-size: 10px; }
+
+    footer { margin-top: 90px; padding: 32px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    .footer-row { display: flex; justify-content: space-between; gap: 20px; }
+
+    @media (max-width: 860px) {
+      .hero-grid, .buy-panel { grid-template-columns: 1fr; }
+      .cover-wrap { margin: 10px auto 0; max-width: 340px; }
+      .contents-grid { grid-template-columns: repeat(2, 1fr); }
+      .system-strip { grid-template-columns: repeat(2, 1fr); }
+      .pain-grid { grid-template-columns: repeat(2, 1fr); }
+      .case-layout { grid-template-columns: 1fr; }
+      .sample-grid { grid-template-columns: 1fr; }
+      .nav-links a:not(.nav-buy) { display: none; }
+    }
+    @media (max-width: 580px) {
+      .container { width: min(100% - 28px, 1120px); }
+      .hero { padding: 58px 0; }
+      h1 { font-size: 39px; }
+      .hero-line { white-space: normal; }
+      section { padding: 64px 0; }
+      .contents-grid, .fit-grid, .system-strip, .pain-grid { grid-template-columns: 1fr; }
+      .role-row { grid-template-columns: 86px 1fr; }
+      .role-row em { grid-column: 2; text-align: left; }
+      .hero-actions .btn { width: 100%; }
+      .footer-row { flex-direction: column; }
+      .buy-panel { padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="container nav" aria-label="AgentTeam 页面导航">
+      <a class="brand" href="../"><span class="brand-mark">芃</span><span>iPeng AI <small>· AgentTeam</small></span></a>
+      <div class="nav-links">
+        <a href="#proof">真实预览</a>
+        <a href="#contents">资料清单</a>
+        <a href="#fit">适合谁</a>
+        <a class="nav-buy" href="#buy">获取模板包</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">AGENTTEAM · PRACTICAL KIT</div>
+          <h1><span class="hero-line">把一堆 Agent，组织成</span><span class="hero-line">一支能工作的团队</span></h1>
+          <p class="hero-copy">Agent 建得多，不等于事情有人推进。真正困难的是：谁负责什么、什么时候打扰你、状态写在哪里、下周怎么接着干。这套资料把这些机制直接给你。</p>
+          <div class="hero-proof">
+            <span>30 分钟搭出第一版</span><span>9 份可编辑资料</span><span>真实工作室实盘经验</span>
+          </div>
+          <div class="price-line"><strong>¥49</strong><span>首发版 · 一次购买</span></div>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#buy">查看购买方式</a>
+            <a class="btn btn-secondary" href="#contents">先看包含什么</a>
+          </div>
+        </div>
+        <div class="cover-wrap">
+          <img src="assets/product-cover.png" alt="一人公司 AI Agent 团队搭建模板包封面">
+        </div>
+      </div>
+    </section>
+
+    <section class="pain-section" aria-labelledby="pain-title">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">WHY IT DOESN'T WORK</span>
+          <h2 id="pain-title">你缺的不是更多 Agent，<br>而是一套管理机制</h2>
+          <p>如果下面任何一种情况眼熟，这套资料解决的就是这些具体问题。</p>
+        </div>
+        <div class="pain-grid">
+          <article class="pain-card">
+            <span class="pain-label">01 · 每次从零开始</span>
+            <h3>同样的背景和要求，要反复解释</h3>
+            <p>Agent 没有岗位说明、状态和记忆结构，换个会话就像换了个人。</p>
+            <span class="gain">你会得到：AGENT_WORK + 记忆分层方法</span>
+          </article>
+          <article class="pain-card">
+            <span class="pain-label">02 · 谁都在做所有事</span>
+            <h3>职责越界，最后还得自己返工</h3>
+            <p>角色按工具或临时任务乱拆，产出互相覆盖，也没人真正负责结果。</p>
+            <span class="gain">你会得到：角色拆解原则 + 边界三问</span>
+          </article>
+          <article class="pain-card">
+            <span class="pain-label">03 · 被消息淹没</span>
+            <h3>一点变化就提醒，注意力被切碎</h3>
+            <p>没有信息分级，正常进展、风险苗头和真正需要裁决的事混在一起。</p>
+            <span class="gain">你会得到：绿 / 黄 / 红灯反馈机制</span>
+          </article>
+          <article class="pain-card">
+            <span class="pain-label">04 · 状态到处散落</span>
+            <h3>日志很多，却看不出哪里需要判断</h3>
+            <p>Agent 做了很多记录，但主理人仍然不知道现在到哪、谁卡住了。</p>
+            <span class="gain">你会得到：3 类状态看板模板</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="proof" class="proof-section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">REAL EXAMPLE &amp; PREVIEW</span>
+          <h2>不是只给目录，先看它实际长什么样</h2>
+          <p>下面来自资料包真实内容与作者当前工作室结构；展示的是方法和模板片段，不是为了销售临时编出来的概念图。</p>
+        </div>
+
+        <div class="case-layout">
+          <article class="case-panel">
+            <span class="case-kicker">实盘结构示例 · 一人工作室</span>
+            <h3>一个人，如何拆成 5 类 Agent</h3>
+            <p class="case-note">按长期业务模块拆角色，而不是每来一个临时任务就新建 Agent。</p>
+            <div class="role-list" aria-label="一人工作室 Agent 角色示例">
+              <div class="role-row"><b>战略教练</b><span>方向判断、组织管理、机会扫描</span><em>关键时预警</em></div>
+              <div class="role-row"><b>增长运营</b><span>渠道运营、转化诊断、数据监控</span><em>每日例行</em></div>
+              <div class="role-row"><b>内容主理人</b><span>选题、创作、发布与数据复盘</span><em>按节奏运行</em></div>
+              <div class="role-row"><b>业务负责人</b><span>核心业务的执行、纪律与复盘</span><em>周期触发</em></div>
+              <div class="role-row"><b>执行代理</b><span>临时项目与一次性交付</span><em>做完即走</em></div>
+            </div>
+          </article>
+
+          <aside class="result-panel">
+            <span class="case-kicker">购买后 30 分钟</span>
+            <h3>你手里会多出 3 个能继续使用的东西</h3>
+            <div class="result-list">
+              <div class="result-item"><b>01</b><div><strong>一张角色分工图</strong><span>知道先建哪个 Agent，也知道哪些暂时不要建。</span></div></div>
+              <div class="result-item"><b>02</b><div><strong>第一份 Agent 岗位说明书</strong><span>写清定位、目标、节奏、汇报方式和禁止事项。</span></div></div>
+              <div class="result-item"><b>03</b><div><strong>一张可持续更新的状态看板</strong><span>下次开启新会话，Agent 能接着当前状态继续推进。</span></div></div>
+            </div>
+            <div class="result-quote">不是买完“学过了”，而是当天就能留下可运行、可修改、可继续迭代的工作文件。</div>
+          </aside>
+        </div>
+
+        <div class="sample-grid" aria-label="资料包真实片段预览">
+          <article class="sample-card">
+            <div class="sample-top"><span class="sample-file">文件1_角色设计方法论.md</span><span class="sample-badge">真实片段</span></div>
+            <div class="sample-body">
+              <h4>职责边界三问</h4>
+              <p>每建一个 Agent 前，先用三道问题判断它是否值得长期存在。</p>
+              <div class="sample-mini-table">
+                <div class="sample-mini-row"><b>工作是否长期存在？</b><span>一次性任务不设长期角色</span></div>
+                <div class="sample-mini-row"><b>是否有独立判断？</b><span>只执行一步的交给临时代理</span></div>
+                <div class="sample-mini-row"><b>能否说清边界？</b><span>说不清就先不要建</span></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="sample-card">
+            <div class="sample-top"><span class="sample-file">附件A_模版-AGENT_WORK.md</span><span class="sample-badge">可复制模板</span></div>
+            <div class="sample-body">
+              <h4>Agent 岗位说明书</h4>
+              <p>不是人设卡，而是一份明确每天怎么工作、何时汇报的执行协议。</p>
+              <div class="sample-code"><span class="key">## 定位</span><br><span class="value">负责增长渠道与转化诊断</span><br><br><span class="key">## 当前北极星</span><br><span class="value">验证一个可重复获客入口</span><br><br><span class="key">## 禁止事项</span><br><span class="value">未经授权不发布、不付费</span></div>
+            </div>
+          </article>
+
+          <article class="sample-card">
+            <div class="sample-top"><span class="sample-file">附件C_状态看板三件套模板.md</span><span class="sample-badge">可复制模板</span></div>
+            <div class="sample-body">
+              <h4>状态与判断分开写</h4>
+              <p>看板只保留主理人真正需要看到的事实、判断与下一步。</p>
+              <div class="sample-mini-table">
+                <div class="sample-mini-row"><b>最新事实</b><span>写可验证的变化，不写感受</span></div>
+                <div class="sample-mini-row"><b>当前判断</b><span>绿灯 / 黄灯 / 红灯</span></div>
+                <div class="sample-mini-row"><b>下一步</b><span>谁在什么时候做什么</span></div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contents">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">WHAT'S INSIDE</span>
+          <h2>9 份文件，每一份都对应一个具体问题</h2>
+          <p>5 个方法文件 + 3 个可复制模板 + 1 份从零开始的使用说明，全部为可编辑 Markdown 源文件。</p>
+        </div>
+        <div class="contents-grid">
+          <article class="content-card"><span class="content-number">01</span><h3>角色设计方法论</h3><p>判断要建几个 Agent、每个角色负责什么，以及哪些事情不值得长期设岗。</p></article>
+          <article class="content-card"><span class="content-number">02</span><h3>AGENT_WORK 搭建法</h3><p>给每个 Agent 写清岗位说明书、目标、时间安排、汇报机制和禁止事项。</p></article>
+          <article class="content-card"><span class="content-number">03</span><h3>周报与消息反馈</h3><p>用绿灯、黄灯、红灯和通知分级，减少无效打扰，又不错过真正的问题。</p></article>
+          <article class="content-card"><span class="content-number">04</span><h3>状态看板设计</h3><p>把当前状态、下一步和需要判断的事项放在 Agent 每次都能读取的位置。</p></article>
+          <article class="content-card"><span class="content-number">05</span><h3>实盘踩坑清单</h3><p>8 个真实问题及对应解法，包括职责越界、记忆丢档、红灯轰炸和看板搬运。</p></article>
+          <article class="content-card template"><span class="content-number">A / B / C</span><h3>3 个可复制附件</h3><p>AGENT_WORK 模板、Agent 周报模板、战略/组织/商机状态看板模板。</p></article>
+        </div>
+        <div class="system-strip" aria-label="AgentTeam 最小工作流">
+          <div class="system-step"><b>STEP 1</b><span>定义角色与边界</span></div>
+          <div class="system-step"><b>STEP 2</b><span>写清工作规则</span></div>
+          <div class="system-step"><b>STEP 3</b><span>建立状态看板</span></div>
+          <div class="system-step"><b>STEP 4</b><span>周报复盘迭代</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="fit">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">WHO IT'S FOR</span>
+          <h2>适合想认真用 Agent 工作的人</h2>
+        </div>
+        <div class="fit-grid">
+          <article class="fit-card">
+            <h3>适合你，如果你是</h3>
+            <ul>
+              <li>一人公司主理人、自由职业者或独立开发者</li>
+              <li>已经在用多个 AI Agent，但职责和上下文比较混乱</li>
+              <li>希望 Agent 能持续推进工作，而不是每次从零开始</li>
+              <li>愿意每周花 10–20 分钟做一次轻量 review</li>
+            </ul>
+          </article>
+          <article class="fit-card not">
+            <h3>暂时不适合，如果你想要</h3>
+            <ul>
+              <li>购买后一键安装、完全不需要调整的自动化系统</li>
+              <li>没有稳定业务场景，先建很多 Agent 再说</li>
+              <li>大而全的视频课程或复杂代码工程</li>
+              <li>把所有判断都交给 AI、自己完全不参与管理</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="buy" class="buy-section">
+      <div class="container">
+        <div class="buy-panel">
+          <div>
+            <span class="section-tag">GET THE KIT</span>
+            <h2>一次购买，拿走整套可编辑源文件</h2>
+            <p>资料包为 Markdown 文件，适合在 Codex、Claude Code、Obsidian 或其他支持文本工作流的环境中直接复制改用。</p>
+            <ul class="buy-list">
+              <li>5 个核心方法文件</li>
+              <li>3 个可直接复制的附件模板</li>
+              <li>1 份从零开始的使用说明</li>
+              <li>首发价 ¥49，一次购买</li>
+            </ul>
+            <div class="delivery-note"><strong>交付说明：</strong>当前通过淘宝完成购买；后续将升级为支付宝收款码自动交付（付完直接进下载页），无需截图或等待人工。虚拟资料交付后不支持无理由退款；下载异常可联系补发。</div>
+          </div>
+          <aside class="pay-card">
+            <div class="pay-title">BUY ON TAOBAO</div>
+            <div class="pay-price">¥49</div>
+            <div class="pay-once">首发版 · 一次购买 · 永久下载</div>
+            <div class="checkout-flow" aria-label="淘宝购买流程">
+              <div class="checkout-step"><b>1</b><span>点击前往淘宝</span></div>
+              <div class="checkout-step"><b>2</b><span>淘宝内完成支付</span></div>
+              <div class="checkout-step"><b>3</b><span>按店铺说明获取资料包</span></div>
+            </div>
+            <p class="pay-help">在淘宝内下单支付，按店铺说明获取资料包。</p>
+            <!-- TODO(agentteam): 替换为你的淘宝商品/店铺链接；商品上架后只改这一处 href -->
+            <a id="buy-taobao" class="btn btn-primary pay-contact" href="https://shop.example.taobao.com" target="_blank" rel="noopener">去淘宝购买 ¥49</a>
+            <p class="checkout-pending">临时方案：跳转淘宝下单；支付宝收款码自动交付后续上线。</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <span>© 2024-2026 芃芃科技 · iPeng AI</span>
+      <span><a href="../">返回品牌主页</a> · <a href="mailto:service@ipengai.cn">service@ipengai.cn</a></span>
+    </div>
+  </footer>
+</body>
+</html>
